@@ -7,7 +7,8 @@ import shortid from 'shortid';
 
 class App extends Component {
   state = {
-    contacts: initialContacts,
+    // contacts: initialContacts,
+    contacts: [],
     filter: '',
   };
 
