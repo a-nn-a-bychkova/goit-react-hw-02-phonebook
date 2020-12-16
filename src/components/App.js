@@ -8,9 +8,7 @@ import shortid from 'shortid';
 class App extends Component {
   state = {
     contacts: initialContacts,
-    name: '',
     filter: '',
-    number: '',
   };
 
   addContact = ({ name, number }) => {
@@ -20,10 +18,17 @@ class App extends Component {
       number,
     };
 
-    console.log(newContact);
-    this.setState(prevState => ({
-      contacts: [newContact, ...prevState.contacts],
-    }));
+    if (
+      this.state.contacts.find(
+        contact => contact.name.toLowerCase() === newContact.name.toLowerCase(),
+      )
+    ) {
+      alert(`${name} is already in contact`);
+    } else {
+      this.setState(prevState => ({
+        contacts: [newContact, ...prevState.contacts],
+      }));
+    }
   };
 
   changeFilter = e => {
@@ -38,6 +43,12 @@ class App extends Component {
     );
   };
 
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
+  };
+
   render() {
     const { name, number, filter, contacts } = this.state;
     const visibleContacts = this.getVisibleContacts();
@@ -47,7 +58,10 @@ class App extends Component {
         <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
         <Filter value={filter} onChange={this.changeFilter} />
-        <ContactList contacts={visibleContacts} />
+        <ContactList
+          contacts={visibleContacts}
+          onDeleteContact={this.deleteContact}
+        />
       </div>
     );
   }
