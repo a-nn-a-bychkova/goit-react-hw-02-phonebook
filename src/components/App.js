@@ -4,6 +4,7 @@ import initialContacts from '../initialContacts.json';
 import ContactList from './ContactList';
 import Filter from './Filter';
 import shortid from 'shortid';
+import PropTypes from 'prop-types';
 
 class App extends Component {
   state = {
@@ -13,19 +14,18 @@ class App extends Component {
   };
 
   addContact = ({ name, number }) => {
-    const newContact = {
-      id: shortid.generate(),
-      name,
-      number,
-    };
-
     if (
-      this.state.contacts.find(
-        contact => contact.name.toLowerCase() === newContact.name.toLowerCase(),
+      this.state.contacts.some(
+        contact => contact.name.toLowerCase() === name.toLowerCase(),
       )
     ) {
       alert(`${name} is already in contact`);
     } else {
+      const newContact = {
+        id: shortid.generate(),
+        name,
+        number,
+      };
       this.setState(prevState => ({
         contacts: [newContact, ...prevState.contacts],
       }));
@@ -58,7 +58,12 @@ class App extends Component {
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
-        <Filter value={filter} onChange={this.changeFilter} />
+        {this.state.contacts.length > 0 ? (
+          <Filter value={filter} onChange={this.changeFilter} />
+        ) : (
+          <p>Your phonebook is empty</p>
+        )}
+
         <ContactList
           contacts={visibleContacts}
           onDeleteContact={this.deleteContact}
@@ -69,3 +74,8 @@ class App extends Component {
 }
 
 export default App;
+
+App.propTypes = {
+  contacts: PropTypes.array.isRequired,
+  filter: PropTypes.string.isRequired,
+};
