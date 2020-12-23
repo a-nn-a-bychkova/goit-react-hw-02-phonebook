@@ -14,11 +14,11 @@ class App extends Component {
   };
 
   addContact = ({ name, number }) => {
-    if (
-      this.state.contacts.some(
-        contact => contact.name.toLowerCase() === name.toLowerCase(),
-      )
-    ) {
+    const isNameInContact = this.state.contacts.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase(),
+    );
+
+    if (isNameInContact) {
       alert(`${name} is already in contact`);
     } else {
       const newContact = {
@@ -58,7 +58,7 @@ class App extends Component {
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
-        {this.state.contacts.length > 0 ? (
+        {contacts.length > 0 ? (
           <Filter value={filter} onChange={this.changeFilter} />
         ) : (
           <p>Your phonebook is empty</p>
